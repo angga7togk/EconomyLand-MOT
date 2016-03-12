@@ -1,0 +1,16 @@
+{
+	"pos1-set": "First position was set at {0}:{1}:{2}",
+	"pos2-set": "Seconds position was set at {0}:{1}:{2} (Price: {M}{3}) Use \"/land buy\" to confirm buying.",
+	"pos1-not-set": "First position was not set.",
+	"must-one-world": "&4You must set position in same world.",
+	"pos-not-set": "Positions are not set correctly.",
+	"bought-land": "You have bought land",
+	"no-land-here": "We don't have land here",
+	"land-info": "#{0} {1} m^2 by {2}",
+	"land-list-header": "Showing land list ({0}/{1})",
+	
+	"modify-forbidden": "#{0}: Here is {1}'s land. You cannot modify here.",
+	"modify-whiteland": "You have to buy here to modify here.",
+	"access-forbidden": "#{0}: Here is {1}'s land. You cannot access here.",
+	"pickup-forbidden": "#{0}: Here is {1}'s land. You cannot pickup item from here."
+}
