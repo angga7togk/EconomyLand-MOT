@@ -39,6 +39,7 @@ public interface Provider{
 	public List<String> getInvitee(int id);
 	
 	public boolean setOwner(int id, String player);
+	public boolean setOption(int id, String option, Object value);
 	
 	public void save();
 	public void close();

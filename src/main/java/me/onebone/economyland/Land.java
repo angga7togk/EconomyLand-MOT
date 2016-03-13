@@ -134,6 +134,12 @@ public class Land{
 		this.invitee.add(player);
 	}
 	
+	public void setOption(String option, Object value){
+		if(this.options.containsKey(option)){
+			this.options.put(option, value);
+		}
+	}
+	
 	public void removeInvitee(String player){
 		player = player.toLowerCase();
 		

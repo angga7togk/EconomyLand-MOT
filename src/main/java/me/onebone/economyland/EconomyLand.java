@@ -442,6 +442,11 @@ public class EconomyLand extends PluginBase implements Listener{
 					return true;
 				}
 				
+				if(!land.hasPermission(player) && !player.hasPermission("economyland.admin.access")){
+					sender.sendMessage(this.getMessage("move-forbidden", new Object[]{id}));
+					return true;
+				}
+				
 				Vector2 start = land.getStart();
 				Vector2 end = land.getEnd();
 				
@@ -544,6 +549,114 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 				
 				sender.sendMessage(this.getMessage("invitee-list", new Object[]{id, String.join(", ", land.getInvitee())}));
+			}else if(args[0].equals("option")){
+				if(!sender.hasPermission("economyland.command.land.option")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				if(args.length < 4){
+					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					return true;
+				}
+				
+				int id;
+				try{
+					id = Integer.parseInt(args[1]);
+				}catch(NumberFormatException e){
+					sender.sendMessage(this.getMessage("invalid-land-id", new Object[]{args[1]}));
+					return true;
+				}
+				
+				Land land = this.provider.getLand(id);
+				if(land == null){
+					sender.sendMessage(this.getMessage("no-such-land", new Object[]{id}));
+					return true;
+				}
+				
+				if(land.getOwner().toLowerCase().equals(sender.getName().toLowerCase()) || sender.hasPermission("economyland.admin.option")){
+					String option = args[2].toLowerCase();
+					String value = args[3].toLowerCase();
+					
+					switch(option){
+					case "pvp":
+						switch(value){
+						case "true":
+						case "t":
+						case "on":
+							this.provider.setOption(id, option, true);
+						break;
+						case "false":
+						case "f":
+						case "off":
+							this.provider.setOption(id, option, false);
+							break;
+						default:
+							sender.sendMessage(this.getMessage("invalid-option"));
+							return true;
+						}
+						
+						sender.sendMessage(this.getMessage("option-set", new Object[]{option, value}));
+						return true;
+					case "pickup":
+						switch(value){
+						case "true":
+						case "t":
+						case "on":
+							this.provider.setOption(id, option, true);
+						break;
+						case "false":
+						case "f":
+						case "off":
+							this.provider.setOption(id, option, false);
+							break;
+						default:
+							sender.sendMessage(this.getMessage("invalid-option"));
+							return true;
+						}
+						return true;
+					case "access":
+						switch(value){
+						case "true":
+						case "t":
+						case "on":
+							this.provider.setOption(id, option, true);
+						break;
+						case "false":
+						case "f":
+						case "off":
+							this.provider.setOption(id, option, false);
+							break;
+						default:
+							sender.sendMessage(this.getMessage("invalid-option"));
+							return true;
+						}
+						
+						sender.sendMessage(this.getMessage("option-set", new Object[]{option, value}));
+						return true;
+					case "hide":
+						switch(value){
+						case "true":
+						case "t":
+						case "on":
+							this.provider.setOption(id, option, true);
+						break;
+						case "false":
+						case "f":
+						case "off":
+							this.provider.setOption(id, option, false);
+							break;
+						default:
+							sender.sendMessage(this.getMessage("invalid-option"));
+							return true;
+						}
+						
+						sender.sendMessage(this.getMessage("option-set", new Object[]{option, value}));
+						return true;
+					}
+				}else{
+					sender.sendMessage(this.getMessage("not-your-land", new Object[]{id}));
+				}
 			}else{
 				sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
 			}

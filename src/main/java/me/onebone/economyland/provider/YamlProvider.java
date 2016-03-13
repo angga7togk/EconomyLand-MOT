@@ -166,7 +166,15 @@ public class YamlProvider implements Provider{
 			this.lands.get(id).setOwner(player);
 			return true;
 		}
-		
+		return false;
+	}
+	
+	@Override
+	public boolean setOption(int id, String option, Object value){
+		if(this.lands.containsKey(id)){
+			this.lands.get(id).setOption(option, value);
+			return true;
+		}
 		return false;
 	}
 
