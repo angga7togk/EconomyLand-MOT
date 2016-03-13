@@ -21,15 +21,18 @@ package me.onebone.economyland;
 import java.util.HashMap;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.item.EntityItem;
 import cn.nukkit.level.Position;
 
 public class PlayerManager{
 	private HashMap<Player, Position> lastPosition;
 	private HashMap<Player, Long> lastShown;
+	private HashMap<Player, Long[]> lastPickup;
 	
 	public PlayerManager(){
 		lastPosition = new HashMap<>();
-		lastShown = new HashMap<Player, Long>();
+		lastShown = new HashMap<>();
+		lastPickup = new HashMap<>();
 	}
 	
 	public boolean isMoved(Player player){
@@ -67,7 +70,20 @@ public class PlayerManager{
 		return System.currentTimeMillis() - lastShown.get(player) > 2000;
 	}
 	
+	public void setLastPickup(Player player, EntityItem item){
+		lastPickup.put(player, new Long[]{System.currentTimeMillis(), item.getId()});
+	}
+	
+	public Long[] getLastPickup(Player player){
+		if(lastPickup.containsKey(player)){
+			return lastPickup.get(player);
+		}
+		return null;
+	}
+	
 	public void unsetPlayer(Player player){
 		lastPosition.remove(player);
+		lastShown.remove(player);
+		lastPickup.remove(player);
 	}
 }
