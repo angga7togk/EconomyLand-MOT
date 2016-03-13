@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
 
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
@@ -33,8 +35,10 @@ import cn.nukkit.utils.Utils;
 import me.onebone.economyland.EconomyLand;
 import me.onebone.economyland.Land;
 
+
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -76,7 +80,8 @@ public class YamlProvider implements Provider{
 					tmp.put((String) v.get("level"), level);
 				}
 				
-				lands.put(k, new Land(k, new Vector2((int) v.get("startX"), (int) v.get("startZ")), new Vector2((int) v.get("endX"), (int) v.get("endZ")), tmp.get((String) v.get("level")), (String) v.get("level"), Double.parseDouble(v.get("price").toString()), (String) v.get("owner"), (Map<String, Object>)v.getOrDefault("options", new HashMap<String, Object>())));
+				lands.put(k, new Land(k, new Vector2((int) v.get("startX"), (int) v.get("startZ")), new Vector2((int) v.get("endX"), (int) v.get("endZ")), tmp.get((String) v.get("level")), (String) v.get("level"), Double.parseDouble(v.get("price").toString()), (String) v.get("owner"), (Map<String, Object>)v.getOrDefault("options", new HashMap<String, Object>()),
+						(List<String>)v.getOrDefault("invitee", new ArrayList<String>())));
 			});
 		}catch(FileNotFoundException e){
 		}catch(IOException e){
@@ -86,7 +91,8 @@ public class YamlProvider implements Provider{
 
 	@Override
 	public void addLand(Vector2 start, Vector2 end, Level level, double price, String owner){
-		lands.put(landId, new Land(landId++, start, end, level, level.getFolderName(), price, owner, new HashMap<String, Object>()));
+		lands.put(landId, new Land(landId++, start, end, level, level.getFolderName(), price, owner, new HashMap<String, Object>(),
+				new ArrayList<String>()));
 	}
 
 	@Override
@@ -127,6 +133,32 @@ public class YamlProvider implements Provider{
 	public Map<Integer, Land> getAll(){
 		return new HashMap<Integer, Land>(lands);
 	}
+	
+	@Override
+	public boolean addInvitee(int id, String player){
+		if(this.lands.containsKey(id)){
+			this.lands.get(id).addInvitee(player);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean removeInvitee(int id, String player){
+		if(this.lands.containsKey(id)){
+			this.lands.get(id).removeInvitee(player);
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public List<String> getInvitee(int id){
+		if(this.lands.containsKey(id)){
+			return this.lands.get(id).getInvitee();
+		}
+		return null;
+	}
 
 	@SuppressWarnings("serial")
 	@Override
@@ -148,8 +180,8 @@ public class YamlProvider implements Provider{
 					put("price", land.getPrice());
 					put("owner", land.getOwner());
 					
-					put("invitee", new ArrayList<String>());
-					put("options", new LinkedHashMap<String, Object>());
+					put("invitee", land.getInvitee());
+					put("options", land.getOptions());
 				}
 			});
 		});

@@ -18,7 +18,9 @@ package me.onebone.economyland;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.nukkit.level.Level;
@@ -34,12 +36,16 @@ public class Land{
 	private String owner;
 	
 	private Map<String, Object> options;
+	private List<String> invitee;
 	
-	public Land(int id, Vector2 start, Vector2 end, Level level, String levelName, double price, String owner, Map<String, Object> options){
+	public Land(int id, Vector2 start, Vector2 end, Level level, String levelName, double price, String owner, 
+			Map<String, Object> options, List<String> invitee){
 		this.id = id;
 		
 		this.price = price;
 		this.owner = owner;
+		
+		this.invitee = new ArrayList<String>(invitee);
 		
 		start = start.floor();
 		end = end.floor();
@@ -96,6 +102,26 @@ public class Land{
 	
 	public String getOwner(){
 		return this.owner;
+	}
+	
+	public List<String> getInvitee(){
+		return this.invitee;
+	}
+	
+	public void addInvitee(String player){
+		player = player.toLowerCase();
+		
+		this.invitee.add(player);
+	}
+	
+	public void removeInvitee(String player){
+		player = player.toLowerCase();
+		
+		this.invitee.remove(player);
+	}
+	
+	public Map<String, Object> getOptions(){
+		return this.options;
 	}
 	
 	public int getId(){

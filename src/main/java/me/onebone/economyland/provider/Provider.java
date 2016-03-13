@@ -18,6 +18,7 @@ package me.onebone.economyland.provider;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.List;
 import java.util.Map;
 
 import me.onebone.economyland.Land;
@@ -32,6 +33,10 @@ public interface Provider{
 	public Land findLand(Position pos);
 	public Land checkOverlap(Position start, Position end);
 	public Map<Integer, Land> getAll();
+	
+	public boolean addInvitee(int id, String player);
+	public boolean removeInvitee(int id, String player);
+	public List<String> getInvitee(int id);
 	
 	public void save();
 	public void close();
