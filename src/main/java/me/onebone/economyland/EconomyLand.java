@@ -244,15 +244,53 @@ public class EconomyLand extends PluginBase implements Listener{
 					return true;
 				}
 				
-				// TODO: Check money
-				
 				double price = (Math.abs(Math.floor(player.x) - Math.floor(pos1.x)) + 1) * (Math.abs(Math.floor(player.y) - Math.floor(pos1.y)) + 1) * this.getConfig().getDouble("price.per-block", 100D);
-				this.provider.addLand(new Vector2(pos1.x, pos1.z), new Vector2(pos2.x, pos2.z), pos1.level, price, player.getName());
+				int result = this.api.reduceMoney(player, price);
+				if(result == EconomyAPI.RET_SUCCESS){
+					this.provider.addLand(new Vector2(pos1.x, pos1.z), new Vector2(pos2.x, pos2.z), pos1.level, price, player.getName());
+					sender.sendMessage(this.getMessage("bought-land"));
+				}else if(result == EconomyAPI.RET_INVALID){
+					sender.sendMessage(this.getMessage("no-money"));
+				}else{
+					sender.sendMessage(this.getMessage("failed-buying"));
+				}
 				
 				removes.add(player);
-				sender.sendMessage(this.getMessage("bought-land"));
+				
 			}else if(args[0].equals("sell")){
-				// TODO
+				if(!sender.hasPermission("economyland.command.land.sell")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				if(args.length < 2){
+					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					return true;
+				}
+				
+				int id;
+				try{
+					id = Integer.parseInt(args[1]);
+				}catch(NumberFormatException e){
+					sender.sendMessage(this.getMessage("invalid-land-id", new Object[]{args[1]}));
+					return true;
+				}
+				
+				Land land = this.provider.getLand(id);
+				if(land == null){
+					sender.sendMessage(this.getMessage("no-such-land", new Object[]{id}));
+					return true;
+				}
+				
+				if(land.getOwner().toLowerCase().equals(sender.getName().toLowerCase()) || sender.hasPermission("economyland.admin.sell")){
+					this.provider.removeLand(land.getId());
+					
+					this.api.addMoney(land.getOwner(), land.getPrice() / 2);
+					
+					sender.sendMessage(this.getMessage("sold-land", new Object[]{id, land.getPrice() / 2}));
+				}else{
+					sender.sendMessage(this.getMessage("not-your-land", new Object[]{id}));
+				}
 			}else if(args[0].equals("here")){
 				if(!(sender instanceof Player)){
 					sender.sendMessage(TextFormat.RED + "Please run this command in-game.");
@@ -269,17 +307,79 @@ public class EconomyLand extends PluginBase implements Listener{
 				if(land == null){
 					player.sendMessage(this.getMessage("no-land-here"));
 				}else{
-					Vector2 start = land.getStart();
-					Vector2 end = land.getEnd();
-					
 					player.sendMessage(this.getMessage("land-info", new Object[]{
-						land.getId(), (Math.abs(Math.floor(end.x) - Math.floor(start.x)) + 1) * (Math.abs(Math.floor(end.y) - Math.floor(start.y)) + 1), land.getOwner()
+						land.getId(), land.getWidth(), land.getOwner()
 					}));
 				}
 			}else if(args[0].equals("give")){
-				// TODO
+				if(!(sender instanceof Player)){
+					sender.sendMessage(TextFormat.RED + "Please run this command in-game.");
+					return true;
+				}
+				
+				if(!sender.hasPermission("economyland.command.land.sell")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				if(args.length < 3){
+					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					return true;
+				}
+				
+				int id;
+				try{
+					id = Integer.parseInt(args[1]);
+				}catch(NumberFormatException e){
+					sender.sendMessage(this.getMessage("invalid-land-id", new Object[]{args[1]}));
+					return true;
+				}
+				
+				Player player;
+				if((player = this.getServer().getPlayer(args[2])) == null){
+					sender.sendMessage(this.getMessage("player-not-online", new Object[]{args[2]}));
+					return true;
+				}
+				
+				Land land = this.provider.getLand(id);
+				if(land == null){
+					sender.sendMessage(this.getMessage("no-such-land", new Object[]{id}));
+					return true;
+				}
+				if(land.getOwner().toLowerCase().equals(sender.getName().toLowerCase()) || sender.hasPermission("economyland.admin.give")){
+					this.provider.setOwner(id, player.getName());
+					
+					sender.sendMessage(this.getMessage("owner-changed", new Object[]{id, land.getOwner()}));
+				}else{
+					sender.sendMessage(this.getMessage("not-your-land", new Object[]{land.getId()}));
+				}
 			}else if(args[0].equals("whose")){
-				// TODO
+				if(!sender.hasPermission("economyland.command.land.whose")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				String player = sender instanceof Player ? sender.getName() : "";
+				if(args.length > 1){
+					player = args[1];
+				}
+				
+				if(player.length() < this.getConfig().get("query-min-length", 3)){
+					sender.sendMessage(this.getMessage("query-too-short"));
+					return true;
+				}
+				
+				final String query = player.toLowerCase();
+				
+				StringBuilder builder = new StringBuilder(this.getMessage("whose-header", new Object[]{query}) + "\n");
+				this.provider.getAll().values().stream().filter((land) -> !land.getOption("hide", false) && (land.getOwner().toLowerCase().startsWith(query) || land.getOwner().toLowerCase().endsWith(query)))
+				.forEach((land) -> {
+					builder.append(this.getMessage("land-info", new Object[]{
+						land.getId(), land.getWidth(), land.getOwner()
+					}) + "\n");
+				});
+				
+				sender.sendMessage(builder.toString());
 			}else if(args[0].equals("list")){
 				if(!sender.hasPermission("economyland.command.land.list")){
 					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
@@ -303,11 +403,8 @@ public class EconomyLand extends PluginBase implements Listener{
 					int current = (int)Math.ceil((double)(i++) / 5);
 					
 					if(current == page){
-						Vector2 start = land.getStart();
-						Vector2 end = land.getEnd();
-						
 						builder.append(this.getMessage("land-info", new Object[]{
-								land.getId(), (Math.abs(Math.floor(end.x) - Math.floor(start.x)) + 1) * (Math.abs(Math.floor(end.y) - Math.floor(start.y)) + 1), land.getOwner()
+								land.getId(), land.getWidth(), land.getOwner()
 						}) + "\n");
 					}else if(current > page) break;
 				}

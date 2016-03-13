@@ -38,6 +38,8 @@ public interface Provider{
 	public boolean removeInvitee(int id, String player);
 	public List<String> getInvitee(int id);
 	
+	public boolean setOwner(int id, String player);
+	
 	public void save();
 	public void close();
 }

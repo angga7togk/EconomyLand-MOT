@@ -71,6 +71,7 @@ public class Land{
 		options.put("pvp", options.getOrDefault("pvp", false));
 		options.put("pickup", options.getOrDefault("pickup", false));
 		options.put("access", options.getOrDefault("access", true));
+		options.put("hide", options.getOrDefault("hide", false));
 		
 		this.options = new HashMap<String, Object>(options);
 	}
@@ -91,12 +92,20 @@ public class Land{
 		return player.equals(this.owner.toLowerCase()) || this.invitee.contains(player);
 	}
 	
+	public void setOwner(String player){
+		this.owner = player;
+	}
+	
 	public Vector2 getStart(){
 		return new Vector2(start.x, start.y);
 	}
 	
 	public Vector2 getEnd(){
 		return new Vector2(end.x, end.y);
+	}
+	
+	public int getWidth(){
+		return (int) ((Math.abs(Math.floor(end.x) - Math.floor(start.x)) + 1) * (Math.abs(Math.floor(end.y) - Math.floor(start.y)) + 1));
 	}
 	
 	public Level getLevel(){

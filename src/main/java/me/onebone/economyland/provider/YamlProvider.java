@@ -159,6 +159,16 @@ public class YamlProvider implements Provider{
 		}
 		return null;
 	}
+	
+	@Override
+	public boolean setOwner(int id, String player){
+		if(this.lands.containsKey(id)){
+			this.lands.get(id).setOwner(player);
+			return true;
+		}
+		
+		return false;
+	}
 
 	@SuppressWarnings("serial")
 	@Override

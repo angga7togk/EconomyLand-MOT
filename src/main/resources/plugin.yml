@@ -31,6 +31,8 @@ permissions:
                 description: "Allows player to use /land sell"
               economyland.command.land.here:
                 description: "Allows player to use /land here"
+              economyland.command.land.give:
+                description: "Allows player to use /land give"
               economyland.command.land.whose:
                 description: "Allows player to use /land whose"
               economyland.command.land.list:
@@ -64,4 +66,6 @@ permissions:
             description: "Allows player to invite player to others' land"
           economyland.admin.kick:
             description: "Allows player to kick player from others' land"
+          economyland.admin.give:
+            description: "Allows player to change owner of other's land"
  
