@@ -36,26 +36,33 @@ import me.onebone.economyland.Land;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
 public class YamlProvider implements Provider{
 	private int landId = 0;
 	
 	private File file;
 	private Map<Integer, Land> lands;
+	private EconomyLand plugin;
 	
 	@SuppressWarnings("unchecked")
 	public YamlProvider(EconomyLand plugin, File file){
 		lands = new HashMap<>();
 		
+		this.plugin = plugin;
 		this.file = file;
 		
-		/*@SuppressWarnings("serial")
-		Config config = new Config(new File(plugin.getDataFolder(), "LandData.json"), Config.JSON, new LinkedHashMap<String, Object>(){
-			{
-				put("landId", 0);
+		try{
+			File dataFile = new File(plugin.getDataFolder(), "LandData.json");
+			if(dataFile.exists()){
+				Map<String, Object> data = new GsonBuilder().create().fromJson(Utils.readFile(dataFile), new TypeToken<LinkedHashMap<String, Object>>(){}.getType());
+				this.landId = (int) data.getOrDefault("landId", 0);
 			}
-		});
-		
-		landId = config.get("landId", 0);*/ // TODO
+		}catch(JsonSyntaxException | IOException e){
+			plugin.getLogger().critical(e.getMessage());
+		}
 		
 		Yaml yaml = new Yaml();
 		
@@ -144,6 +151,13 @@ public class YamlProvider implements Provider{
 			
 			Yaml yaml = new Yaml(option);
 			Utils.writeFile(file, yaml.dump(saves));
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("landId", landId);
+			
+			String content = new GsonBuilder().create().toJson(map);
+
+			Utils.writeFile(new File(plugin.getDataFolder(), "LandData.json"), content);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
