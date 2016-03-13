@@ -387,10 +387,8 @@ public class EconomyLand extends PluginBase implements Listener{
 		Player player = event.getPlayer();
 		
 		if(this.manager.isMoved(player)){
-			long time = System.nanoTime();
 			Land land;
 			if((land = this.provider.findLand(player)) != null && !land.getOption("access", false)){
-				System.out.println(System.nanoTime() - time);
 				if(!(land.getOwner().toLowerCase().equals(player.getName().toLowerCase()) || player.hasPermission("economyland.admin.access"))){
 					player.teleport(this.manager.getLastPosition(player));
 					
@@ -404,7 +402,6 @@ public class EconomyLand extends PluginBase implements Listener{
 					return;
 				}
 			}
-			System.out.println(System.nanoTime() - time);
 			this.manager.setPosition(player);
 		}
 	}
