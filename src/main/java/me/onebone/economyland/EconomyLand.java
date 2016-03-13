@@ -369,7 +369,7 @@ public class EconomyLand extends PluginBase implements Listener{
 			long now = System.currentTimeMillis();
 			Long[] lastPickup = this.manager.getLastPickup(player);
 			
-			if(lastPickup == null || (lastPickup[1] == item.getId() && now - lastPickup[0] > 2000)){
+			if(lastPickup == null || (lastPickup[1] == item.getId() && now - lastPickup[0] > 2000) || lastPickup[1] != item.getId()){
 				Land land;
 				if((land = this.provider.findLand(item)) != null && !land.getOption("pickup", false)){
 					if(!(land.getOwner().toLowerCase().equals(player.getName().toLowerCase()) || player.hasPermission("economyland.admin.pickup"))){
