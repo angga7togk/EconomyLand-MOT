@@ -4,6 +4,7 @@
 	"pos1-not-set": "First position was not set.",
 	"must-one-world": "&4You must set position in same world.",
 	"pos-not-set": "Positions are not set correctly.",
+	"land-overlap": "You are trying to overlap with land #{0} which {1} owns.",
 	"bought-land": "You have bought land",
 	"no-land-here": "We don't have land here",
 	"land-info": "#{0} {1} m^2 by {2}",

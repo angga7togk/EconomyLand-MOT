@@ -58,7 +58,7 @@ public class YamlProvider implements Provider{
 			File dataFile = new File(plugin.getDataFolder(), "LandData.json");
 			if(dataFile.exists()){
 				Map<String, Object> data = new GsonBuilder().create().fromJson(Utils.readFile(dataFile), new TypeToken<LinkedHashMap<String, Object>>(){}.getType());
-				this.landId = (int) data.getOrDefault("landId", 0);
+				this.landId = (int) Double.parseDouble(data.getOrDefault("landId", 0).toString());
 			}
 		}catch(JsonSyntaxException | IOException e){
 			plugin.getLogger().critical(e.getMessage());
@@ -110,6 +110,14 @@ public class YamlProvider implements Provider{
 	public Land findLand(Position pos){
 		for(Land land : lands.values()){
 			if(land.check(pos)) return land;
+		}
+		return null;
+	}
+	
+	@Override
+	public Land checkOverlap(Position start, Position end){
+		for(Land land : lands.values()){
+			if(land.check(start) || land.check(end)) return land;
 		}
 		return null;
 	}

@@ -233,6 +233,14 @@ public class EconomyLand extends PluginBase implements Listener{
 					return true;
 				}
 				
+				Land land;
+				if((land = this.provider.checkOverlap(pos1, pos2)) != null){
+					sender.sendMessage(this.getMessage("land-overlap", new Object[]{
+						land.getId(), land.getOwner()
+					}));
+					return true;
+				}
+				
 				// TODO: Check money
 				
 				double price = (Math.abs(Math.floor(player.x) - Math.floor(pos1.x)) + 1) * (Math.abs(Math.floor(player.y) - Math.floor(pos1.y)) + 1) * this.getConfig().getDouble("price.per-block", 100D);

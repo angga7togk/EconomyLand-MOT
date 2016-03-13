@@ -30,6 +30,7 @@ public interface Provider{
 	public boolean removeLand(int id);
 	public Land getLand(int id);
 	public Land findLand(Position pos);
+	public Land checkOverlap(Position start, Position end);
 	public Map<Integer, Land> getAll();
 	
 	public void save();
