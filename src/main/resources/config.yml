@@ -1,6 +1,7 @@
 # Your preferred language (eng, kor, jpn)
 language: eng
 
+max-land: NaN
 query-min-length: 3
 price:
   per-block: 100

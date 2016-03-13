@@ -43,6 +43,7 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.inventory.InventoryPickupItemEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
+import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
@@ -51,6 +52,9 @@ import cn.nukkit.network.protocol.UpdateBlockPacket.Entry;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.TextFormat;
 import cn.nukkit.utils.Utils;
+import me.onebone.economyland.error.LandCountMaximumException;
+import me.onebone.economyland.error.LandCreationException;
+import me.onebone.economyland.error.LandOverlapException;
 import me.onebone.economyland.provider.*;
 import me.onebone.economyapi.EconomyAPI;
 
@@ -63,6 +67,33 @@ public class EconomyLand extends PluginBase implements Listener{
 	private PlayerManager manager;
 	private List<Player> removes;
 	private Map<String, String> lang;
+	
+	public int addLand(Position start, Position end, Level level, String owner) throws LandOverlapException, LandCountMaximumException{
+		return addLand(start, end, level, owner, 0.0);
+	}
+	
+	public int addLand(Position start, Position end, Level level, String owner, double price) throws LandOverlapException, LandCountMaximumException{
+		return addLand(start, end, level, owner, price, new HashMap<String, Object>());
+	}
+	
+	public int addLand(Position start, Position end, Level level, final String owner, double price, Map<String, Object> options) throws LandOverlapException, LandCountMaximumException{
+		Land land;
+		if((land = this.provider.checkOverlap(start, end)) != null){
+			throw new LandOverlapException("Land is overlapping", land);
+		}
+		
+		int max = Integer.MAX_VALUE;
+		try{
+			max = Integer.parseInt(this.getConfig().get("max-land").toString());
+		}catch(NumberFormatException e){}
+		
+		long count = this.provider.getAll().values().stream().filter((l) -> l.getOwner().toLowerCase().equals(owner)).count();
+		if(count >= max){
+			throw new LandCountMaximumException("Land is now maximum", max);
+		}
+		
+		return this.provider.addLand(new Vector2(start.x, start.z), new Vector2(end.x, end.z), level, 0, owner);
+	}
 	
 	public String getMessage(String key){
 		return this.getMessage(key, new String[]{});
@@ -236,27 +267,25 @@ public class EconomyLand extends PluginBase implements Listener{
 					return true;
 				}
 				
-				Land land;
-				if((land = this.provider.checkOverlap(pos1, pos2)) != null){
-					sender.sendMessage(this.getMessage("land-overlap", new Object[]{
-						land.getId(), land.getOwner()
-					}));
-					return true;
-				}
-				
 				double price = (Math.abs(Math.floor(player.x) - Math.floor(pos1.x)) + 1) * (Math.abs(Math.floor(player.y) - Math.floor(pos1.y)) + 1) * this.getConfig().getDouble("price.per-block", 100D);
-				int result = this.api.reduceMoney(player, price);
-				if(result == EconomyAPI.RET_SUCCESS){
-					this.provider.addLand(new Vector2(pos1.x, pos1.z), new Vector2(pos2.x, pos2.z), pos1.level, price, player.getName());
-					sender.sendMessage(this.getMessage("bought-land"));
-				}else if(result == EconomyAPI.RET_INVALID){
-					sender.sendMessage(this.getMessage("no-money"));
+				if(this.api.myMoney(player) >= price){
+					try{
+						this.addLand(pos1, pos2, pos1.level, player.getName());
+						this.api.reduceMoney(player, price, true);
+						
+						sender.sendMessage(this.getMessage("bought-land"));
+					}catch(LandOverlapException e){
+						sender.sendMessage(this.getMessage("land-overlap", new Object[]{
+							e.overlappingWith().getId(), e.overlappingWith().getOwner()
+						}));
+					}catch(LandCountMaximumException e){
+						sender.sendMessage(this.getMessage("max-land-count", new Object[]{e.getMax()}));
+					}
 				}else{
-					sender.sendMessage(this.getMessage("failed-buying"));
+					sender.sendMessage(this.getMessage("no-money"));
 				}
 				
 				removes.add(player);
-				
 			}else if(args[0].equals("sell")){
 				if(!sender.hasPermission("economyland.command.land.sell")){
 					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");

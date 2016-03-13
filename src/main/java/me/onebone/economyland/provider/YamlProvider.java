@@ -90,9 +90,10 @@ public class YamlProvider implements Provider{
 	}
 
 	@Override
-	public void addLand(Vector2 start, Vector2 end, Level level, double price, String owner){
-		lands.put(landId, new Land(landId++, start, end, level, level.getFolderName(), price, owner, new HashMap<String, Object>(),
+	public int addLand(Vector2 start, Vector2 end, Level level, double price, String owner){
+		lands.put(landId, new Land(landId, start, end, level, level.getFolderName(), price, owner, new HashMap<String, Object>(),
 				new ArrayList<String>()));
+		return landId++;
 	}
 
 	@Override

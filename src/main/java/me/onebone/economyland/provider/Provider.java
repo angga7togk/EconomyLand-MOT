@@ -27,7 +27,7 @@ import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector2;
 
 public interface Provider{
-	public void addLand(Vector2 start, Vector2 end, Level level, double price, String owner);
+	public int addLand(Vector2 start, Vector2 end, Level level, double price, String owner);
 	public boolean removeLand(int id);
 	public Land getLand(int id);
 	public Land findLand(Position pos);
