@@ -29,12 +29,13 @@ public class Land{
 	private int id;
 	private Vector2 start, end;
 	private Level level;
+	private String levelName;
 	private double price;
 	private String owner;
 	
 	private Map<String, Object> options;
 	
-	public Land(int id, Vector2 start, Vector2 end, Level level, double price, String owner, Map<String, Object> options){
+	public Land(int id, Vector2 start, Vector2 end, Level level, String levelName, double price, String owner, Map<String, Object> options){
 		this.id = id;
 		
 		this.price = price;
@@ -58,6 +59,7 @@ public class Land{
 		this.start = start;
 		this.end = end;
 		this.level = level;
+		this.levelName = levelName;
 		
 		options.put("pvp", options.getOrDefault("pvp", false));
 		options.put("pickup", options.getOrDefault("pickup", false));
@@ -82,6 +84,10 @@ public class Land{
 	
 	public Level getLevel(){
 		return this.level;
+	}
+	
+	public String getLevelName(){
+		return this.levelName;
 	}
 	
 	public double getPrice(){

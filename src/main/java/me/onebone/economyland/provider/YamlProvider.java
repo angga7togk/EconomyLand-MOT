@@ -72,10 +72,11 @@ public class YamlProvider implements Provider{
 
 			load.forEach((k, v) -> {
 				if(!tmp.containsKey((String) v.get("level"))){
-					tmp.put((String) v.get("level"), plugin.getServer().getLevelByName((String) v.get("level")));
+					Level level = plugin.getServer().getLevelByName((String) v.get("level"));
+					tmp.put((String) v.get("level"), level);
 				}
 				
-				lands.put(k, new Land(k, new Vector2((int) v.get("startX"), (int) v.get("startZ")), new Vector2((int) v.get("endX"), (int) v.get("endZ")), tmp.get((String) v.get("level")), (double) v.get("price"), (String) v.get("owner"), (Map<String, Object>)v.getOrDefault("options", new HashMap<String, Object>())));
+				lands.put(k, new Land(k, new Vector2((int) v.get("startX"), (int) v.get("startZ")), new Vector2((int) v.get("endX"), (int) v.get("endZ")), tmp.get((String) v.get("level")), (String) v.get("level"), Double.parseDouble(v.get("price").toString()), (String) v.get("owner"), (Map<String, Object>)v.getOrDefault("options", new HashMap<String, Object>())));
 			});
 		}catch(FileNotFoundException e){
 		}catch(IOException e){
@@ -85,7 +86,7 @@ public class YamlProvider implements Provider{
 
 	@Override
 	public void addLand(Vector2 start, Vector2 end, Level level, double price, String owner){
-		lands.put(landId++, new Land(landId++, start, end, level, price, owner, new HashMap<String, Object>()));
+		lands.put(landId++, new Land(landId++, start, end, level, level.getFolderName(), price, owner, new HashMap<String, Object>()));
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public class YamlProvider implements Provider{
 					put("endX", (int) end.x);
 					put("endZ", (int) end.y);
 					
-					put("level", land.getLevel().getFolderName());
+					put("level", land.getLevelName());
 					
 					put("price", land.getPrice());
 					put("owner", land.getOwner());
