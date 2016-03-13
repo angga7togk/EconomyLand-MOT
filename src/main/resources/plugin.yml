@@ -8,8 +8,8 @@ depend: [EconomyAPI]
 commands:
   land:
     description: "Management command of land"
-    usage: "/land <pos1|pos2|buy|sell|give|here|whose|list|invite|kick>"
-    permission: economyland.command.land;economyland.command.land.pos1;economyland.command.land.pos2;economyland.command.land.buy;economyland.command.land.sell;economyland.command.land.here;economyland.command.land.whose;economyland.command.land.list;economyland.command.land.move;economyland.command.land.invite;economyland.command.land.kick;
+    usage: "/land <pos1|pos2|buy|sell|give|here|whose|list|invite|kick|invitee>"
+    permission: economyland.command.land;economyland.command.land.pos1;economyland.command.land.pos2;economyland.command.land.buy;economyland.command.land.sell;economyland.command.land.here;economyland.command.land.whose;economyland.command.land.list;economyland.command.land.move;economyland.command.land.invite;economyland.command.land.kick;economyland.command.land.invitee;
 permissions:
   economyland:
     description: "Includes all permissions for EconomyLand"
@@ -41,6 +41,8 @@ permissions:
                 description: "Allows player to use /land kick"
               economyland.command.land.invite:
                 description: "Allows player to use /land invite"
+              economyland.command.land.invitee:
+                description: "Allows player to use /land invitee"
       economyland.buy:
         description: "Allows player to buy land"
         default: true
@@ -58,4 +60,8 @@ permissions:
             description: "Allows player to access others' land"
           economyland.admin.pickup:
             description: "Allows player to pick up items in others' land"
+          economyland.admin.invite:
+            description: "Allows player to invite player to others' land"
+          economyland.admin.kick:
+            description: "Allows player to kick player from others' land"
  

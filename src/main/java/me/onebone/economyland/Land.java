@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector2;
@@ -78,6 +79,16 @@ public class Land{
 		return pos.level == this.level
 				&& (this.start.x <= pos.x && pos.x <= this.end.x)
 				&& (this.start.y <= pos.z && pos.z <= this.end.y);
+	}
+	
+	public boolean hasPermission(Player player){
+		return this.hasPermission(player.getName());
+	}
+	
+	public boolean hasPermission(String player){
+		player = player.toLowerCase();
+		
+		return player.equals(this.owner.toLowerCase()) || this.invitee.contains(player);
 	}
 	
 	public Vector2 getStart(){

@@ -159,6 +159,8 @@ public class EconomyLand extends PluginBase implements Listener{
 				return true;
 			}
 			
+			args[0] = args[0].toLowerCase();
+			
 			if(args[0].equals("pos1")){
 				if(!(sender instanceof Player)){
 					sender.sendMessage(TextFormat.RED + "Please run this command in-game.");
@@ -286,11 +288,14 @@ public class EconomyLand extends PluginBase implements Listener{
 				int page = 1;
 				
 				Map<Integer, Land> lands = this.provider.getAll();
+				int max = (int) Math.ceil(((double) lands.size()) / 5);
 				if(args.length > 1){
-					page = Math.min(lands.size() / 5, Math.max(1, Integer.parseInt(args[1])));
+					try{
+						page = Math.min(max, Math.max(1, Integer.parseInt(args[1])));
+					}catch(NumberFormatException e){}
 				}
 				
-				StringBuilder builder = new StringBuilder(this.getMessage("land-list-header", new Object[]{page, lands.size() / 5}) + "\n");
+				StringBuilder builder = new StringBuilder(this.getMessage("land-list-header", new Object[]{page, max}) + "\n");
 				int i = 1;
 				
 				for(Land land : lands.values()){
@@ -310,9 +315,102 @@ public class EconomyLand extends PluginBase implements Listener{
 			}else if(args[0].equals("move")){
 				// TODO
 			}else if(args[0].equals("invite")){
-				// TODO
+				if(!sender.hasPermission("economyland.command.land.invite")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				if(args.length < 3){
+					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					return true;
+				}
+				
+				int id;
+				try{
+					id = Integer.parseInt(args[1]);
+				}catch(NumberFormatException e){
+					sender.sendMessage(this.getMessage("invalid-land-id", new Object[]{args[1]}));
+					return true;
+				}
+				
+				Land land = this.provider.getLand(id);
+				if(land == null){
+					sender.sendMessage(this.getMessage("no-such-land", new Object[]{id}));
+					return true;
+				}
+				if(land.getOwner().toLowerCase().equals(sender.getName().toLowerCase()) || sender.hasPermission("economyland.admin.invite")){
+					List<String> invitee = this.provider.getInvitee(id);
+					if(invitee.contains(args[2].toLowerCase())){
+						sender.sendMessage(this.getMessage("already-invitee", new Object[]{args[2], id}));
+						return true;
+					}
+					
+					this.provider.addInvitee(id, args[2]);
+					sender.sendMessage(this.getMessage("invited-player", new Object[]{args[2], id}));
+				}else{
+					sender.sendMessage(this.getMessage("not-your-land", new Object[]{id}));
+				}
 			}else if(args[0].equals("kick")){
-				// TODO
+				if(!sender.hasPermission("economyland.command.land.kick")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				if(args.length < 3){
+					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					return true;
+				}
+				
+				int id;
+				try{
+					id = Integer.parseInt(args[1]);
+				}catch(NumberFormatException e){
+					sender.sendMessage(this.getMessage("invalid-land-id", new Object[]{args[1]}));
+					return true;
+				}
+				
+				Land land = this.provider.getLand(id);
+				if(land == null){
+					sender.sendMessage(this.getMessage("no-such-land", new Object[]{id}));
+					return true;
+				}
+				if(land.getOwner().toLowerCase().equals(sender.getName().toLowerCase()) || sender.hasPermission("economyland.admin.kick")){
+					List<String> invitee = this.provider.getInvitee(id);
+					if(invitee.contains(args[2].toLowerCase())){
+						this.provider.removeInvitee(id, args[2]);
+						sender.sendMessage(this.getMessage("kicked-invitee", new Object[]{args[2], id}));
+						return true;
+					}
+					sender.sendMessage(this.getMessage("not-invitee", new Object[]{args[2], id}));
+				}else{
+					sender.sendMessage(this.getMessage("not-your-land", new Object[]{id}));
+				}
+			}else if(args[0].equals("invitee")){
+				if(!sender.hasPermission("economyland.command.land.invitee")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				if(args.length < 2){
+					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					return true;
+				}
+				
+				int id;
+				try{
+					id = Integer.parseInt(args[1]);
+				}catch(NumberFormatException e){
+					sender.sendMessage(this.getMessage("invalid-land-id", new Object[]{args[1]}));
+					return true;
+				}
+				
+				Land land = this.provider.getLand(id);
+				if(land == null){
+					sender.sendMessage(this.getMessage("no-such-land", new Object[]{id}));
+					return true;
+				}
+				
+				sender.sendMessage(this.getMessage("invitee-list", new Object[]{id, String.join(", ", land.getInvitee())}));
 			}else{
 				sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
 			}
@@ -329,7 +427,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		
 		Land land;
 		if((land = this.provider.findLand(block)) != null){
-			if(!(land.getOwner().toLowerCase().equals(player.getName().toLowerCase()) || player.hasPermission("economyland.admin.modify"))){
+			if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.modify"))){
 				player.sendMessage(this.getMessage("modify-forbidden"));
 				
 				event.setCancelled(true);
@@ -348,7 +446,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		
 		Land land;
 		if((land = this.provider.findLand(block)) != null){
-			if(!(land.getOwner().toLowerCase().equals(player.getName().toLowerCase()) || player.hasPermission("economyland.admin.modify"))){
+			if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.modify"))){
 				event.setCancelled(true);
 				
 				player.sendMessage(this.getMessage("modify-forbidden"));
@@ -372,7 +470,7 @@ public class EconomyLand extends PluginBase implements Listener{
 			if(lastPickup == null || (lastPickup[1] == item.getId() && now - lastPickup[0] > 2000) || lastPickup[1] != item.getId()){
 				Land land;
 				if((land = this.provider.findLand(item)) != null && !land.getOption("pickup", false)){
-					if(!(land.getOwner().toLowerCase().equals(player.getName().toLowerCase()) || player.hasPermission("economyland.admin.pickup"))){
+					if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.pickup"))){
 						event.setCancelled(true);
 						player.sendMessage(this.getMessage("pickup-forbidden", new Object[]{
 								land.getId(), land.getOwner()
@@ -394,7 +492,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		if(this.manager.isMoved(player)){
 			Land land;
 			if((land = this.provider.findLand(player)) != null && !land.getOption("access", false)){
-				if(!(land.getOwner().toLowerCase().equals(player.getName().toLowerCase()) || player.hasPermission("economyland.admin.access"))){
+				if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.access"))){
 					player.teleport(this.manager.getLastPosition(player));
 					
 					if(this.manager.canShow(player)){
