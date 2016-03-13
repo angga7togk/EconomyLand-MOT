@@ -166,6 +166,10 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 				
 				Player player = (Player) sender;
+				if(!player.hasPermission("economyland.command.land.pos1")){
+					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
 				
 				if(!players.containsKey(player)){
 					players.put(player, new Position[2]);
@@ -182,6 +186,10 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 				
 				Player player = (Player) sender;
+				if(!player.hasPermission("economyland.command.land.pos2")){
+					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
 				
 				if(!players.containsKey(player)){
 					sender.sendMessage(this.getMessage("pos1-not-set"));
@@ -207,6 +215,10 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 				
 				Player player = (Player) sender;
+				if(!player.hasPermission("economyland.command.land.buy")){
+					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
 				
 				if(!players.containsKey(player)){
 					sender.sendMessage(this.getMessage("pos-not-set"));
@@ -237,6 +249,10 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 				
 				Player player = (Player) sender;
+				if(!player.hasPermission("economyland.command.land.here")){
+					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
 				
 				Land land = this.provider.findLand(player);
 				if(land == null){
@@ -254,6 +270,11 @@ public class EconomyLand extends PluginBase implements Listener{
 			}else if(args[0].equals("whose")){
 				// TODO
 			}else if(args[0].equals("list")){
+				if(!sender.hasPermission("economyland.command.land.list")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
 				int page = 1;
 				
 				Map<Integer, Land> lands = this.provider.getAll();
@@ -279,6 +300,10 @@ public class EconomyLand extends PluginBase implements Listener{
 				
 				sender.sendMessage(builder.toString());
 			}else if(args[0].equals("move")){
+				// TODO
+			}else if(args[0].equals("invite")){
+				// TODO
+			}else if(args[0].equals("kick")){
 				// TODO
 			}else{
 				sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());

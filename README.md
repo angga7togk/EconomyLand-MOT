@@ -7,7 +7,7 @@ A plugin which allows your server to create and manage lands
 - mvn package
 
 ## Commands
-- `/land <pos1|pos2|buy|sell|give|here|whose|list>`
+- `/land <pos1|pos2|buy|sell|give|here|whose|list|invite|kick>`
 
 ## Permissions
 - economyland
@@ -21,6 +21,8 @@ A plugin which allows your server to create and manage lands
 			- economyland.command.land.whose
 			- economyland.command.land.list
 			- economyland.command.land.move
+			- economyland.command.land.invite
+			- economyland.command.land.kick
 	- economyland.buy
 	- economyland.sell
 	- economyland.admin

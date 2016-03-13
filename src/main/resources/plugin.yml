@@ -8,8 +8,8 @@ depend: [EconomyAPI]
 commands:
   land:
     description: "Management command of land"
-    usage: "/land <pos1|pos2|buy|sell|give|here|whose|list>"
-    permission: economyland.command.land;economyland.command.land.pos1;economyland.command.land.pos2;economyland.command.land.buy;economyland.command.land.sell;economyland.command.land.here;economyland.command.land.whose;economyland.command.land.list;economyland.command.land.move;
+    usage: "/land <pos1|pos2|buy|sell|give|here|whose|list|invite|kick>"
+    permission: economyland.command.land;economyland.command.land.pos1;economyland.command.land.pos2;economyland.command.land.buy;economyland.command.land.sell;economyland.command.land.here;economyland.command.land.whose;economyland.command.land.list;economyland.command.land.move;economyland.command.land.invite;economyland.command.land.kick;
 permissions:
   economyland:
     description: "Includes all permissions for EconomyLand"
@@ -37,6 +37,10 @@ permissions:
                 description: "Allows player to use /land list"
               economyland.command.land.move:
                 description: "Allows player to use /land move"
+              economyland.command.land.kick:
+                description: "Allows player to use /land kick"
+              economyland.command.land.invite:
+                description: "Allows player to use /land invite"
       economyland.buy:
         description: "Allows player to buy land"
         default: true
