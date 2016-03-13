@@ -23,6 +23,7 @@ A plugin which allows your server to create and manage lands
 			- economyland.command.land.move
 			- economyland.command.land.invite
 			- economyland.command.land.kick
+			- economyland.command.land.invitee
 	- economyland.buy
 	- economyland.sell
 	- economyland.admin
@@ -30,3 +31,5 @@ A plugin which allows your server to create and manage lands
 		- economyland.admin.modify
 		- economyland.admin.access
 		- economyland.admin.pickup
+		- economyland.admin.invite
+		- economyland.admin.kick

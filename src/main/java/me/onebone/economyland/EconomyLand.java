@@ -45,6 +45,7 @@ import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector2;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.UpdateBlockPacket;
 import cn.nukkit.network.protocol.UpdateBlockPacket.Entry;
 import cn.nukkit.plugin.PluginBase;
@@ -313,7 +314,42 @@ public class EconomyLand extends PluginBase implements Listener{
 				
 				sender.sendMessage(builder.toString());
 			}else if(args[0].equals("move")){
-				// TODO
+				if(!(sender instanceof Player)){
+					sender.sendMessage(TextFormat.RED + "Please run this command in-game.");
+					return true;
+				}
+				
+				Player player = (Player) sender;
+				
+				if(!player.hasPermission("economyland.command.land.move")){
+					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				if(args.length < 2){
+					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					return true;
+				}
+				
+				int id;
+				try{
+					id = Integer.parseInt(args[1]);
+				}catch(NumberFormatException e){
+					sender.sendMessage(this.getMessage("invalid-land-id", new Object[]{args[1]}));
+					return true;
+				}
+				
+				Land land = this.provider.getLand(id);
+				if(land == null){
+					sender.sendMessage(this.getMessage("no-such-land", new Object[]{id}));
+					return true;
+				}
+				
+				Vector2 start = land.getStart();
+				Vector2 end = land.getEnd();
+				
+				Vector3 center = new Vector3((start.x + end.x) / 2, 128, (start.y + end.y) / 2);
+				player.teleport(player.level.getSafeSpawn(center));
 			}else if(args[0].equals("invite")){
 				if(!sender.hasPermission("economyland.command.land.invite")){
 					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
