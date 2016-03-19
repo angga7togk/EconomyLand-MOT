@@ -53,7 +53,6 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.TextFormat;
 import cn.nukkit.utils.Utils;
 import me.onebone.economyland.error.LandCountMaximumException;
-import me.onebone.economyland.error.LandCreationException;
 import me.onebone.economyland.error.LandOverlapException;
 import me.onebone.economyland.provider.*;
 import me.onebone.economyapi.EconomyAPI;
@@ -84,7 +83,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		
 		int max = Integer.MAX_VALUE;
 		try{
-			max = Integer.parseInt(this.getConfig().get("max-land").toString());
+			max = Integer.parseInt(this.getConfig().get("max-land", "NaN").toString());
 		}catch(NumberFormatException e){}
 		
 		long count = this.provider.getAll().values().stream().filter((l) -> l.getOwner().toLowerCase().equals(owner)).count();
@@ -93,6 +92,10 @@ public class EconomyLand extends PluginBase implements Listener{
 		}
 		
 		return this.provider.addLand(new Vector2(start.x, start.z), new Vector2(end.x, end.z), level, 0, owner);
+	}
+	
+	public Land checkOverlap(Position start, Position end){
+		return this.provider.checkOverlap(start, end);
 	}
 	
 	public String getMessage(String key){
