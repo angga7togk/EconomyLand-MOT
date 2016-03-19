@@ -695,7 +695,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		return false;
 	}
 	
-	@EventHandler
+	@EventHandler (ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event){
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
@@ -714,7 +714,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event){
 		Player player = event.getPlayer();
 		Block block = event.getBlockReplace();
@@ -733,7 +733,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (ignoreCancelled = true)
 	public void onItemPickup(InventoryPickupItemEvent event){
 		if(event.getInventory().getHolder() instanceof Player){
 			Player player = (Player) event.getInventory().getHolder();
@@ -760,7 +760,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		}
 	}
 	
-	@EventHandler
+	@EventHandler (ignoreCancelled = true)
 	public void onPlayerMove(PlayerMoveEvent event){
 		Player player = event.getPlayer();
 		
