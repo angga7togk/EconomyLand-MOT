@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +42,10 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.inventory.InventoryPickupItemEvent;
+import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector2;
@@ -64,7 +67,7 @@ public class EconomyLand extends PluginBase implements Listener{
 	
 	private Map<Player, Position[]> players;
 	private PlayerManager manager;
-	private List<Player> removes;
+	private List<Player> removes, placeQueue;
 	private Map<String, String> lang;
 	
 	public int addLand(Position start, Position end, Level level, String owner) throws LandOverlapException, LandCountMaximumException{
@@ -156,6 +159,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		
 		players = new HashMap<>();
 		removes = new ArrayList<Player>();
+		placeQueue = new LinkedList<Player>();
 		
 		manager = new PlayerManager();
 		
@@ -706,33 +710,61 @@ public class EconomyLand extends PluginBase implements Listener{
 		Land land;
 		if((land = this.provider.findLand(block)) != null){
 			if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.modify"))){
-				player.sendMessage(this.getMessage("modify-forbidden"));
+				player.sendMessage(this.getMessage("modify-forbidden", new Object[]{
+						land.getId(), land.getOwner()
+				}));
 				
 				event.setCancelled(true);
 			}
-		}else if(this.getConfig().getStringList("white-world-protection").contains(block.level.getFolderName()) || player.hasPermission("economyland.admin.modify")){
+		}else if(this.getConfig().getStringList("white-world-protection").contains(block.level.getFolderName()) && !player.hasPermission("economyland.admin.modify")){
 			player.sendMessage(this.getMessage("modify-whiteland"));
 			
 			event.setCancelled();
 		}
 	}
 	
-	@EventHandler (ignoreCancelled = true)
-	public void onBlockPlace(BlockPlaceEvent event){
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event){
 		Player player = event.getPlayer();
-		Block block = event.getBlockReplace();
+		Block block = event.getBlock();
+		Item item = event.getItem();
+		
+		if(item.canBePlaced() && !block.canBeActivated() && event.getAction() == PlayerInteractEvent.RIGHT_CLICK_BLOCK){ // placing
+			block = block.getSide(event.getFace());
+		}
 		
 		Land land;
 		if((land = this.provider.findLand(block)) != null){
 			if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.modify"))){
 				event.setCancelled(true);
 				
-				player.sendMessage(this.getMessage("modify-forbidden"));
+				player.sendMessage(this.getMessage("modify-forbidden", new Object[]{
+						land.getId(), land.getOwner()
+				}));
+				
+				if(event.getAction() == PlayerInteractEvent.RIGHT_CLICK_BLOCK && !block.canBeActivated() && event.getItem().canBePlaced()){
+					this.placeQueue.add(player);
+				}
 			}
-		}else if(this.getConfig().getStringList("white-world-protection").contains(block.level.getFolderName()) || player.hasPermission("economyland.admin.modify")){
+		}else if(this.getConfig().getStringList("white-world-protection").contains(block.level.getFolderName()) && !player.hasPermission("economyland.admin.modify")){
 			event.setCancelled(true);
 			
 			player.sendMessage(this.getMessage("modify-whiteland"));
+			
+			if(event.getAction() == PlayerInteractEvent.RIGHT_CLICK_BLOCK && !block.canBeActivated() && event.getItem().canBePlaced()){
+				this.placeQueue.add(player);
+			}
+		}
+	}
+	
+	@EventHandler (ignoreCancelled = true)
+	public void onBlockPlace(BlockPlaceEvent event){
+		Player player = event.getPlayer();
+		
+		if(this.placeQueue.contains(player)){
+			event.setCancelled();
+			
+			this.placeQueue.remove(player);
 		}
 	}
 	
