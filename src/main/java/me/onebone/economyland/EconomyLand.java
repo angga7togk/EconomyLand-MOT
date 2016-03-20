@@ -757,7 +757,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		}
 	}
 	
-	@EventHandler (ignoreCancelled = true)
+	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event){
 		Player player = event.getPlayer();
 		
