@@ -84,8 +84,17 @@ public class YamlProvider implements Provider{
 					tmp.put((String) v.get("level"), level);
 				}
 				
+				List<String> invitee = new ArrayList<String>();
+				
+				Object obj = v.getOrDefault("invitee", new ArrayList<String>());
+				if(obj instanceof Map){
+					Map<Object, Boolean> temp = (HashMap<Object, Boolean>) obj;
+					temp.keySet().forEach((name) -> invitee.add(name.toString()));
+				}else{
+					((ArrayList<String>)obj).forEach((val) -> invitee.add(val));
+				}
 				lands.put(k, new Land(k, new Vector2((int) v.get("startX"), (int) v.get("startZ")), new Vector2((int) v.get("endX"), (int) v.get("endZ")), tmp.get((String) v.get("level")), (String) v.get("level"), Double.parseDouble(v.get("price").toString()), (String) v.get("owner"), (Map<String, Object>)v.getOrDefault("options", new HashMap<String, Object>()),
-						(List<String>)v.getOrDefault("invitee", new ArrayList<String>())));
+						invitee));
 			});
 		}catch(FileNotFoundException e){
 		}catch(IOException e){
