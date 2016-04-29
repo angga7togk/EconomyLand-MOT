@@ -1,4 +1,4 @@
-# EconomyLand
+# EconomyLand [![Build Status](https://travis-ci.org/EconomyS/EconomyLand.svg?branch=master)](https://travis-ci.org/EconomyS/EconomyLand)
 A plugin which allows your server to create and manage lands
 
 ## Build
