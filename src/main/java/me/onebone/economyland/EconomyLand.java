@@ -86,7 +86,11 @@ public class EconomyLand extends PluginBase implements Listener{
 		
 		int max = Integer.MAX_VALUE;
 		try{
-			max = Integer.parseInt(this.getConfig().get("max-land", "NaN").toString());
+			if(this.getConfig().isInt("max-land")){
+				max = this.getConfig().get("max-land", 1);	
+			}else{
+				max = Integer.parseInt(this.getConfig().get("max-land", "NaN").toString());
+			}
 		}catch(NumberFormatException e){}
 		
 		long count = this.provider.getAll().values().stream().filter((l) -> l.getOwner().toLowerCase().equals(owner)).count();
