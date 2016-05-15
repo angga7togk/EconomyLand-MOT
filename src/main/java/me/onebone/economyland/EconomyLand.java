@@ -294,6 +294,13 @@ public class EconomyLand extends PluginBase implements Listener{
 					return true;
 				}
 				
+				if(this.getConfig().get("buy-forbidden", new ArrayList<String>()).contains(pos1.level.getFolderName())){
+					sender.sendMessage(this.getMessage("buying-forbidden"));
+					
+					removes.add(player);
+					return true;
+				}
+				
 				double price = (Math.abs(Math.floor(player.x) - Math.floor(pos1.x)) + 1) * (Math.abs(Math.floor(player.y) - Math.floor(pos1.y)) + 1) * this.getConfig().getDouble("price.per-block", 100D);
 				if(this.api.myMoney(player) >= price){
 					try{

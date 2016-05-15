@@ -8,6 +8,7 @@
 	"max-land-count": "&4You have reached max count ({0}) of land.",
 	"no-money": "&4You don't have enough money to buy land.",
 	"failed-buying": "&4Failed buying land.",
+	"buying-forbidden": "&4You cannot buy land of this world.",
 	"bought-land": "&2You have bought land",
 	"no-land-here": "No one owns here.",
 	"land-info": "#{0} {1} m^2 by {2}",
