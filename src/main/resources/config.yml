@@ -7,3 +7,6 @@ price:
   per-block: 100
 # White world protection can make players not able to modify land before buying
 white-world-protection: []
+
+# Prevent liquid from flowing to other land
+block-flowing: true

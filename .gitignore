@@ -1,1 +1,6 @@
-target
+/target
+*.bat
+
+.settings
+.project
+.classpath

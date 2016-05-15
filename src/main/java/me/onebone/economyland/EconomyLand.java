@@ -34,6 +34,7 @@ import com.google.gson.reflect.TypeToken;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockLiquid;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.item.EntityItem;
@@ -41,6 +42,7 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
+import cn.nukkit.event.block.BlockUpdateEvent;
 import cn.nukkit.event.inventory.InventoryPickupItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
@@ -738,6 +740,32 @@ public class EconomyLand extends PluginBase implements Listener{
 			player.sendMessage(this.getMessage("modify-whiteland"));
 			
 			event.setCancelled();
+		}
+	}
+	
+	@EventHandler (ignoreCancelled = true)
+	public void onBlockUpdate(BlockUpdateEvent event){
+		Block block = event.getBlock();
+		
+		if(this.getConfig().get("block-flowing", true) && block instanceof BlockLiquid){
+			Land origin = this.provider.findLand(block);
+			
+			for(int side = 2; side <= 5; side++){
+				Land land = this.provider.findLand(block.getSide(side));
+				
+				if(land == null && origin == null){
+					continue;
+				}
+				
+				if((land == null && origin != null)
+						|| (origin == null && land != null)
+						|| !land.getOwner().equals(origin.getOwner())){
+					
+					block.y = -200;
+					event.setCancelled(true);
+					return;
+				}
+			}
 		}
 	}
 	
