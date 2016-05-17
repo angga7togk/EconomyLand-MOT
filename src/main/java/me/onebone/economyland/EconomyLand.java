@@ -755,23 +755,9 @@ public class EconomyLand extends PluginBase implements Listener{
 		Block block = event.getBlock();
 		
 		if(this.getConfig().get("block-flowing", true) && block instanceof BlockLiquid){
-			Land origin = this.provider.findLand(block);
-			
-			for(int side = 2; side <= 5; side++){
-				Land land = this.provider.findLand(block.getSide(side));
-				
-				if(land == null && origin == null){
-					continue;
-				}
-				
-				if((land == null && origin != null)
-						|| (origin == null && land != null)
-						|| !land.getOwner().equals(origin.getOwner())){
-					
-					block.y = -200;
-					event.setCancelled(true);
-					return;
-				}
+			if(!this.provider.canUpdate(block)){
+				block.y = -200;
+				event.setCancelled(true);
 			}
 		}
 	}

@@ -134,6 +134,49 @@ public class YamlProvider implements Provider{
 		}
 		return null;
 	}
+
+	@Override
+	public boolean canUpdate(Position pos){
+		String owner = "";
+
+		int i = 0;
+		Land[] landList = new Land[4];
+		for(Land land : lands.values()){
+			Vector2 start = land.getStart();
+			Vector2 end = land.getEnd();
+			if(pos.level == land.getLevel()
+				&& (start.x - 1 <= pos.x && pos.x <= end.x + 1)
+				&& (start.y - 1 <= pos.z && pos.z <= end.y + 1)){
+				if(owner.equals("")){
+					owner = land.getOwner();
+
+					landList[i++] = land;
+					continue;
+				}else if(!owner.equals(land.getOwner())){
+					return false;
+				}
+			}
+		}
+		
+		if(i == 0) return true;
+		else if(i == 1){
+			Land land = landList[0];
+
+			Vector2 start = land.getStart();
+			Vector2 end = land.getEnd();
+
+			return (start.x < pos.x - 1 && start.y < pos.z - 1
+				&& pos.x < end.x && pos.z < end.y);
+		}else{
+			for(i = 0; i < landList.length; i++){
+				Land land = landList[i];
+				if(land == null) return false;
+
+				if(land.check(pos)) return true;
+			}
+			return false;
+		}
+	}
 	
 	@Override
 	public Land checkOverlap(Position start, Position end){

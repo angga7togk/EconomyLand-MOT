@@ -30,6 +30,7 @@ public interface Provider{
 	public int addLand(Vector2 start, Vector2 end, Level level, double price, String owner);
 	public boolean removeLand(int id);
 	public Land getLand(int id);
+	public boolean canUpdate(Position pos);
 	public Land findLand(Position pos);
 	public Land checkOverlap(Position start, Position end);
 	public Map<Integer, Land> getAll();
