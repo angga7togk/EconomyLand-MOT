@@ -157,7 +157,7 @@ public class YamlProvider implements Provider{
 				}
 			}
 		}
-		
+	
 		if(i == 0) return true;
 		else if(i == 1){
 			Land land = landList[0];
@@ -165,8 +165,10 @@ public class YamlProvider implements Provider{
 			Vector2 start = land.getStart();
 			Vector2 end = land.getEnd();
 
-			return !(start.x == pos.x || start.y == pos.z
-				|| pos.x == end.x || pos.z == end.y);
+			return !(((pos.x - 1 <= start.x && start.x <= end.x + 1
+				|| pos.x - 1 <= end.x && pos.x <= end.x + 1))
+				&& ((pos.z - 1 <= start.y && start.y <= end.y + 1)
+				|| (pos.z - 1 <= end.y && end.y <= pos.z + 1)));
 		}else{
 			for(i = 0; i < landList.length; i++){
 				Land land = landList[i];
