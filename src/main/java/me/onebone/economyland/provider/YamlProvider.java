@@ -165,10 +165,10 @@ public class YamlProvider implements Provider{
 			Vector2 start = land.getStart();
 			Vector2 end = land.getEnd();
 
-			return !(((pos.x - 1 <= start.x && start.x <= end.x + 1
-				|| pos.x - 1 <= end.x && pos.x <= end.x + 1))
-				&& ((pos.z - 1 <= start.y && start.y <= end.y + 1)
-				|| (pos.z - 1 <= end.y && end.y <= pos.z + 1)));
+			return !(((pos.x - 1 <= start.x && start.x <= pos.x + 1) 
+				|| (pos.x - 1 <= end.x && end.x <= pos.x + 1))
+				|| ((pos.z - 1 <= start.y && start.y <= pos.z + 1)
+				|| (pos.z - 1 <= end.y && end.y <= pos.z + 1)));				
 		}else{
 			for(i = 0; i < landList.length; i++){
 				Land land = landList[i];

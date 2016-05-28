@@ -756,7 +756,6 @@ public class EconomyLand extends PluginBase implements Listener{
 		
 		if(this.getConfig().get("block-flowing", true) && block instanceof BlockLiquid){
 			if(!this.provider.canUpdate(block)){
-				block.y = -200;
 				event.setCancelled(true);
 			}
 		}
