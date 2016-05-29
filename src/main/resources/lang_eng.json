@@ -16,6 +16,7 @@
 	"invalid-land-id": "&4Invalid land id: &b#{0}&f was given.",
 	"no-such-land": "&4There is no land with id &b#{0}&f.",
 	"not-your-land": "&4{0} is not your land.",
+	"land-corrupted": "&4World of #{0} is corrupted. You cannot move.",
 	"already-invitee": "&4{0} is already invitee of land &b#{1}&f.",
 	"invited-player": "&2You have invited {0} to &b#{1}&f.",
 	"not-invitee": "&4{0} is not invitee of &b#{1}&f.",

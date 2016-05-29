@@ -514,7 +514,14 @@ public class EconomyLand extends PluginBase implements Listener{
 				Vector2 end = land.getEnd();
 				
 				Vector3 center = new Vector3((start.x + end.x) / 2, 128, (start.y + end.y) / 2);
-				player.teleport(player.level.getSafeSpawn(center));
+				
+				Level level = this.getServer().getLevelByName(land.getLevelName());
+				
+				if(level instanceof Level){
+					player.teleport(level.getSafeSpawn(center));
+				}else{
+					player.sendMessage(this.getMessage("land-corrupted", new Object[]{id}));
+				}
 			}else if(args[0].equals("invite")){
 				if(!sender.hasPermission("economyland.command.land.invite")){
 					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
