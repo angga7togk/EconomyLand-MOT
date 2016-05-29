@@ -29,6 +29,7 @@
 	"query-too-short": "검색어가 너무 짧습니다.",
 	"invalid-option": "옵션이 유효하지 않습니다. 가능한 옵션: &2pvp, pickup, access, hide",
 	"option-set": "옵션 {0} 이 {1} 로 설정되었습니다.",
+	"land-message": "&b#{0}&f 의 말: &e{1}",
 	
 	"modify-forbidden": "&4#{0}: 여기는 {1} 님의 땅입니다. 여기를 수정할 수 있는 권한이 없습니다.",
 	"modify-whiteland": "&4여기를 수정하시려면 땅을 구매하셔야 합니다.",

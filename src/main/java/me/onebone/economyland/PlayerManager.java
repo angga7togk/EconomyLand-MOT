@@ -28,11 +28,13 @@ public class PlayerManager{
 	private HashMap<Player, Position> lastPosition;
 	private HashMap<Player, Long> lastShown;
 	private HashMap<Player, Long[]> lastPickup;
+	private HashMap<Player, Land> lastLand;
 	
 	public PlayerManager(){
 		lastPosition = new HashMap<>();
 		lastShown = new HashMap<>();
 		lastPickup = new HashMap<>();
+		lastLand = new HashMap<>();
 	}
 	
 	public boolean isMoved(Player player){
@@ -81,9 +83,18 @@ public class PlayerManager{
 		return null;
 	}
 	
+	public void setLastLand(Player player, Land land){
+		lastLand.put(player, land);
+	}
+	
+	public Land getLastLand(Player player){
+		return lastLand.get(player);
+	}
+	
 	public void unsetPlayer(Player player){
 		lastPosition.remove(player);
 		lastShown.remove(player);
 		lastPickup.remove(player);
+		lastLand.remove(player);
 	}
 }

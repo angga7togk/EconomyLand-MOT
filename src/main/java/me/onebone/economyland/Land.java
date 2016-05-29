@@ -72,6 +72,7 @@ public class Land{
 		options.put("pickup", options.getOrDefault("pickup", false));
 		options.put("access", options.getOrDefault("access", true));
 		options.put("hide", options.getOrDefault("hide", false));
+		options.put("message", options.getOrDefault("message", null));
 		
 		this.options = new HashMap<String, Object>(options);
 	}

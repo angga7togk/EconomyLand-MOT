@@ -258,7 +258,26 @@ public class YamlProvider implements Provider{
 					put("owner", land.getOwner());
 					
 					put("invitee", land.getInvitee());
-					put("options", land.getOptions());
+					
+					Map<String, Object> options = land.getOptions();
+					
+					Map<String, Object> defaults = new HashMap<String, Object>(){
+						{
+							put("pvp", false);
+							put("pickup", false);
+							put("access", true);
+							put("hide", false);
+							put("message", null);
+						}
+					};
+					for(String option : new String[]{"pvp", "pickup", "access", "hide", "message"}){
+						Object val = options.get(option);
+						
+						if(val == null || val.equals(defaults.get(option))){
+							options.remove(option);
+						}
+					}
+					put("options", options);
 				}
 			});
 		});

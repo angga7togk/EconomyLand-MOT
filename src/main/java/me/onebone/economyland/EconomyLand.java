@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -646,7 +647,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				
 				if(land.getOwner().toLowerCase().equals(sender.getName().toLowerCase()) || sender.hasPermission("economyland.admin.option")){
 					String option = args[2].toLowerCase();
-					String value = args[3].toLowerCase();
+					String value = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
 					
 					switch(option){
 					case "pvp":
@@ -720,6 +721,11 @@ public class EconomyLand extends PluginBase implements Listener{
 							sender.sendMessage(this.getMessage("invalid-option"));
 							return true;
 						}
+						
+						sender.sendMessage(this.getMessage("option-set", new Object[]{option, value}));
+						return true;
+					case "message":
+						this.provider.setOption(id, option, value);
 						
 						sender.sendMessage(this.getMessage("option-set", new Object[]{option, value}));
 						return true;
@@ -848,19 +854,32 @@ public class EconomyLand extends PluginBase implements Listener{
 		
 		if(this.manager.isMoved(player)){
 			Land land;
-			if((land = this.provider.findLand(player)) != null && !land.getOption("access", false)){
-				if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.access"))){
-					player.teleport(this.manager.getLastPosition(player));
-					
-					if(this.manager.canShow(player)){
-						player.sendMessage(this.getMessage("access-forbidden", new Object[]{
-							land.getId(), land.getOwner()
-						}));
+			if((land = this.provider.findLand(player)) != null){
+				if(!land.getOption("access", false)){
+					if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.access"))){
+						player.teleport(this.manager.getLastPosition(player));
 						
-						this.manager.setShown(player);
+						if(this.manager.canShow(player)){
+							player.sendMessage(this.getMessage("access-forbidden", new Object[]{
+								land.getId(), land.getOwner()
+							}));
+							
+							this.manager.setShown(player);
+						}
+						return;
 					}
-					return;
+				}else{
+					if(this.manager.getLastLand(player) != land){
+						String message = land.getOption("message", null);
+						if(message != null && !message.equals("")){
+							player.sendMessage(this.getMessage("land-message", new Object[]{land.getId(), message}));
+						}
+						
+						this.manager.setLastLand(player, land);
+					}
 				}
+			}else{
+				this.manager.setLastLand(player, null);
 			}
 			this.manager.setPosition(player);
 		}

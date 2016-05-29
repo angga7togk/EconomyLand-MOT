@@ -29,6 +29,7 @@
 	"query-too-short": "Query is too short.",
 	"invalid-option": "Invalid option. Options: &2pvp, pickup, access, hide",
 	"option-set": "Option {0} was set to {1}.",
+	"land-message": "&b#{0}&f says: &e{1}",
 	
 	"modify-forbidden": "&4#{0}: Here is {1}'s land. You cannot modify here.",
 	"modify-whiteland": "&4You have to buy here to modify here.",
