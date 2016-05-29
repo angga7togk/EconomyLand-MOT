@@ -763,6 +763,8 @@ public class EconomyLand extends PluginBase implements Listener{
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event){
+		if(event.getAction() == PlayerInteractEvent.LEFT_CLICK_AIR || event.getAction() == PlayerInteractEvent.RIGHT_CLICK_AIR) return;
+		
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
 		Item item = event.getItem();
