@@ -663,7 +663,7 @@ public class EconomyLand extends PluginBase implements Listener{
 							this.provider.setOption(id, option, false);
 							break;
 						default:
-							sender.sendMessage(this.getMessage("invalid-option"));
+							sender.sendMessage(this.getMessage("invalid-value"));
 							return true;
 						}
 						
@@ -682,7 +682,7 @@ public class EconomyLand extends PluginBase implements Listener{
 							this.provider.setOption(id, option, false);
 							break;
 						default:
-							sender.sendMessage(this.getMessage("invalid-option"));
+							sender.sendMessage(this.getMessage("invalid-value"));
 							return true;
 						}
 						return true;
@@ -699,7 +699,7 @@ public class EconomyLand extends PluginBase implements Listener{
 							this.provider.setOption(id, option, false);
 							break;
 						default:
-							sender.sendMessage(this.getMessage("invalid-option"));
+							sender.sendMessage(this.getMessage("invalid-valid"));
 							return true;
 						}
 						
@@ -718,7 +718,7 @@ public class EconomyLand extends PluginBase implements Listener{
 							this.provider.setOption(id, option, false);
 							break;
 						default:
-							sender.sendMessage(this.getMessage("invalid-option"));
+							sender.sendMessage(this.getMessage("invalid-value"));
 							return true;
 						}
 						
@@ -728,6 +728,9 @@ public class EconomyLand extends PluginBase implements Listener{
 						this.provider.setOption(id, option, value);
 						
 						sender.sendMessage(this.getMessage("option-set", new Object[]{option, value}));
+						return true;
+					default:
+						sender.sendMessage(this.getMessage("invalid-option", new Object[]{"pvp, pickup, access, hide, message"}));
 						return true;
 					}
 				}else{

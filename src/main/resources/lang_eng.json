@@ -27,7 +27,8 @@
 	"owner-changed": "&2Owner of &b#{0}&f is now &2{1}&f.",
 	"whose-header": "Showing lands of &2{0}&f:",
 	"query-too-short": "Query is too short.",
-	"invalid-option": "Invalid option. Options: &2pvp, pickup, access, hide",
+	"invalid-option": "Invalid option. Options: &2{0}",
+	"invalid-value": "&4Invalid value was given.",
 	"option-set": "Option {0} was set to {1}.",
 	"land-message": "&b#{0}&f says: &e{1}",
 	
