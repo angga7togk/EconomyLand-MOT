@@ -13,3 +13,5 @@ buy-forbidden: []
 
 # Prevent liquid from flowing to other land
 block-flowing: true
+
+auto-save: 300

@@ -202,6 +202,8 @@ public class EconomyLand extends PluginBase implements Listener{
 		this.provider = new YamlProvider(this, new File(this.getDataFolder(), "Land.yml"));
 		
 		this.getServer().getScheduler().scheduleDelayedRepeatingTask(new ShowBlockTask(this), 20, 20);
+		int interval = this.getConfig().getInt("auto-save", 300) * 1200;
+		this.getServer().getScheduler().scheduleDelayedRepeatingTask(new AutoSaveTask(this), interval, interval);
 		this.getServer().getPluginManager().registerEvents(this, this);
 	}
 	
@@ -935,5 +937,9 @@ public class EconomyLand extends PluginBase implements Listener{
 				removes.remove(player);
 			}
 		}
+	}
+	
+	public void save(){
+		this.provider.save();
 	}
 }
