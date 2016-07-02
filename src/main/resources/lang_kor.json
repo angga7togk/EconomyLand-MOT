@@ -30,6 +30,7 @@
 	"invalid-option": "옵션이 유효하지 않습니다. 가능한 옵션: &2{0}",
 	"invalid-value": "잘못된 값이 주어졌습니다.",
 	"option-set": "옵션 {0} 이 {1} 로 설정되었습니다.",
+	"options-tag": "&b#{0} 의 옵션:",
 	"land-message": "&b#{0}&f 의 말: &e{1}",
 	
 	"modify-forbidden": "&4#{0}: 여기는 {1} 님의 땅입니다. 여기를 수정할 수 있는 권한이 없습니다.",

@@ -8,8 +8,8 @@ depend: [EconomyAPI]
 commands:
   land:
     description: "Management command of land"
-    usage: "/land <pos1|pos2|buy|sell|give|here|whose|list|invite|kick|invitee|option>"
-    permission: economyland.command.land;economyland.command.land.pos1;economyland.command.land.pos2;economyland.command.land.buy;economyland.command.land.sell;economyland.command.land.here;economyland.command.land.whose;economyland.command.land.list;economyland.command.land.move;economyland.command.land.invite;economyland.command.land.kick;economyland.command.land.invitee;economyland.command.land.option;
+    usage: "/land <pos1|pos2|buy|sell|give|here|whose|list|invite|kick|invitee|option|options>"
+    permission: economyland.command.land;economyland.command.land.pos1;economyland.command.land.pos2;economyland.command.land.buy;economyland.command.land.sell;economyland.command.land.here;economyland.command.land.whose;economyland.command.land.list;economyland.command.land.move;economyland.command.land.invite;economyland.command.land.kick;economyland.command.land.invitee;economyland.command.land.option;economyland.command.land.options;
 permissions:
   economyland:
     description: "Includes all permissions for EconomyLand"
@@ -47,6 +47,8 @@ permissions:
                 description: "Allows player to use /land invitee"
               economyland.command.land.option:
                 description: "Allows player to use /land option"
+              economyland.command.land.options:
+                description: "Allows player to use /land options"
       economyland.buy:
         description: "Allows player to buy land"
         default: true

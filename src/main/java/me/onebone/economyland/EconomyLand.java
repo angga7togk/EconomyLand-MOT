@@ -738,6 +738,39 @@ public class EconomyLand extends PluginBase implements Listener{
 				}else{
 					sender.sendMessage(this.getMessage("not-your-land", new Object[]{id}));
 				}
+			}else if(args[0].equals("options")){
+				if(!sender.hasPermission("economyland.command.land.options")){
+					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					return true;
+				}
+				
+				if(args.length < 2){
+					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					return true;
+				}
+				
+				int id;
+				try{
+					id = Integer.parseInt(args[1]);
+				}catch(NumberFormatException e){
+					sender.sendMessage(this.getMessage("invalid-land-id", new Object[]{args[1]}));
+					return true;
+				}
+				
+				Land land = this.provider.getLand(id);
+				if(land == null){
+					sender.sendMessage(this.getMessage("no-such-land", new Object[]{id}));
+					return true;
+				}
+				
+				StringBuilder builder = new StringBuilder(this.getMessage("options-tag", new Object[]{id}) + "\n");
+				
+				Map<String, Object> options = land.getOptions();
+				for(String option : options.keySet()){
+					builder.append(TextFormat.GREEN + option + TextFormat.WHITE + "> " + TextFormat.AQUA + options.get(option) + "\n");
+				}
+				
+				sender.sendMessage(builder.substring(0, builder.length() - 1));
 			}else{
 				sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
 			}
