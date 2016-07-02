@@ -508,7 +508,7 @@ public class EconomyLand extends PluginBase implements Listener{
 					return true;
 				}
 				
-				if(!land.hasPermission(player) && !player.hasPermission("economyland.admin.access") && !land.getOption("access", false)){
+				if(!land.hasPermission(player) && !player.hasPermission("economyland.admin.access") && !land.getOption("access", true)){
 					sender.sendMessage(this.getMessage("move-forbidden", new Object[]{id}));
 					return true;
 				}
@@ -893,7 +893,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		if(this.manager.isMoved(player)){
 			Land land;
 			if((land = this.provider.findLand(player)) != null){
-				if(!land.getOption("access", false)){
+				if(!land.getOption("access", true)){
 					if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.access"))){
 						player.teleport(this.manager.getLastPosition(player));
 						
