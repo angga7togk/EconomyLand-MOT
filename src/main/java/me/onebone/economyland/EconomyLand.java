@@ -508,7 +508,7 @@ public class EconomyLand extends PluginBase implements Listener{
 					return true;
 				}
 				
-				if(!land.hasPermission(player) && !player.hasPermission("economyland.admin.access")){
+				if(!land.hasPermission(player) && !player.hasPermission("economyland.admin.access") && !land.getOption("access", false)){
 					sender.sendMessage(this.getMessage("move-forbidden", new Object[]{id}));
 					return true;
 				}
