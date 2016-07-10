@@ -795,7 +795,9 @@ public class EconomyLand extends PluginBase implements Listener{
 				event.setCancelled(true);
 			}
 		}else if(this.getConfig().getStringList("white-world-protection").contains(block.level.getFolderName()) && !player.hasPermission("economyland.admin.modify")){
-			player.sendMessage(this.getMessage("modify-whiteland"));
+			if(this.getConfig().getBoolean("show-white-world-message", true)){
+				player.sendMessage(this.getMessage("modify-whiteland"));
+			}
 			
 			event.setCancelled();
 		}
@@ -839,8 +841,9 @@ public class EconomyLand extends PluginBase implements Listener{
 			}
 		}else if(this.getConfig().getStringList("white-world-protection").contains(block.level.getFolderName()) && !player.hasPermission("economyland.admin.modify")){
 			event.setCancelled(true);
-			
-			player.sendMessage(this.getMessage("modify-whiteland"));
+			if(this.getConfig().getBoolean("show-white-world-message", true)){
+				player.sendMessage(this.getMessage("modify-whiteland"));
+			}
 			
 			if(event.getAction() == PlayerInteractEvent.RIGHT_CLICK_BLOCK && !block.canBeActivated() && event.getItem().canBePlaced()){
 				this.placeQueue.add(player);

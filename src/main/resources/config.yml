@@ -8,6 +8,9 @@ price:
 # White world protection can make players not able to modify land before buying
 white-world-protection: []
 
+# Shows message if player tries to modify white world
+show-white-world-message: true
+
 # Worlds which are forbidden to buy
 buy-forbidden: []
 
