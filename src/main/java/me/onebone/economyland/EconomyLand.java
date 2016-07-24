@@ -41,6 +41,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.item.EntityItem;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.TranslationContainer;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.block.BlockUpdateEvent;
@@ -217,8 +218,7 @@ public class EconomyLand extends PluginBase implements Listener{
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
 		if(command.getName().equals("land")){
 			if(args.length < 1){
-				sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
-				return true;
+				return false;
 			}
 			
 			args[0] = args[0].toLowerCase();
@@ -231,7 +231,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				
 				Player player = (Player) sender;
 				if(!player.hasPermission("economyland.command.land.pos1")){
-					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					player.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
@@ -251,7 +251,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				
 				Player player = (Player) sender;
 				if(!player.hasPermission("economyland.command.land.pos2")){
-					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					player.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
@@ -280,7 +280,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				
 				Player player = (Player) sender;
 				if(!player.hasPermission("economyland.command.land.buy")){
-					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					player.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
@@ -325,12 +325,12 @@ public class EconomyLand extends PluginBase implements Listener{
 				removes.add(player);
 			}else if(args[0].equals("sell")){
 				if(!sender.hasPermission("economyland.command.land.sell")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
 				if(args.length < 2){
-					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.usage", "/land sell <id>"));
 					return true;
 				}
 				
@@ -365,7 +365,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				
 				Player player = (Player) sender;
 				if(!player.hasPermission("economyland.command.land.here")){
-					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					player.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
@@ -384,12 +384,12 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 				
 				if(!sender.hasPermission("economyland.command.land.sell")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
 				if(args.length < 3){
-					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.usage", "/land give <id> <player>"));
 					return true;
 				}
 				
@@ -421,7 +421,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 			}else if(args[0].equals("whose")){
 				if(!sender.hasPermission("economyland.command.land.whose")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
@@ -448,7 +448,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				sender.sendMessage(builder.toString());
 			}else if(args[0].equals("list")){
 				if(!sender.hasPermission("economyland.command.land.list")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
@@ -485,12 +485,12 @@ public class EconomyLand extends PluginBase implements Listener{
 				Player player = (Player) sender;
 				
 				if(!player.hasPermission("economyland.command.land.move")){
-					player.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					player.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
 				if(args.length < 2){
-					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.usage", command.getUsage()));
 					return true;
 				}
 				
@@ -527,12 +527,12 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 			}else if(args[0].equals("invite")){
 				if(!sender.hasPermission("economyland.command.land.invite")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
 				if(args.length < 3){
-					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.usage", "/land invite <id> <player>"));
 					return true;
 				}
 				
@@ -563,12 +563,12 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 			}else if(args[0].equals("kick")){
 				if(!sender.hasPermission("economyland.command.land.kick")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
 				if(args.length < 3){
-					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.usage", "/land kick <id> <player>"));
 					return true;
 				}
 				
@@ -598,12 +598,12 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 			}else if(args[0].equals("invitee")){
 				if(!sender.hasPermission("economyland.command.land.invitee")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
 				if(args.length < 2){
-					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.usage", "/land invitee <id>"));
 					return true;
 				}
 				
@@ -624,12 +624,12 @@ public class EconomyLand extends PluginBase implements Listener{
 				sender.sendMessage(this.getMessage("invitee-list", new Object[]{id, String.join(", ", land.getInvitee())}));
 			}else if(args[0].equals("option")){
 				if(!sender.hasPermission("economyland.command.land.option")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
 				if(args.length < 4){
-					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.usage", "/land option <id> <option> <value...>"));
 					return true;
 				}
 				
@@ -740,12 +740,12 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 			}else if(args[0].equals("options")){
 				if(!sender.hasPermission("economyland.command.land.options")){
-					sender.sendMessage(TextFormat.RED + "You don't have permission to use this command.");
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
 					return true;
 				}
 				
 				if(args.length < 2){
-					sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+					sender.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.usage", "/land options <id>"));
 					return true;
 				}
 				
@@ -772,7 +772,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				
 				sender.sendMessage(builder.substring(0, builder.length() - 1));
 			}else{
-				sender.sendMessage(TextFormat.RED + "Usage: " + command.getUsage());
+				return false;
 			}
 			return true;
 		}
