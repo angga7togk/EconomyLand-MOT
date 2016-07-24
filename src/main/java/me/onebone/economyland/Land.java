@@ -51,20 +51,21 @@ public class Land{
 		start = start.floor();
 		end = end.floor();
 		
-		if(start.x > end.x){
-			double tmp = start.x;
-			start.x = end.x;
-			end.x = tmp;
+		double startX = start.x, endX = end.x;
+		double startZ = start.y, endZ = end.y;
+		
+		if(start.x > end.y){
+			startX = end.x;
+			endX = start.x;
 		}
 		
 		if(start.y > end.y){
-			double tmp = start.y;
-			start.y = end.y;
-			end.y = tmp;
+			startZ = end.y;
+			endZ = start.y;
 		}
 		
-		this.start = start;
-		this.end = end;
+		this.start = new Vector2(startX, startZ);
+		this.end = new Vector2(endX, endZ);
 		this.level = level;
 		this.levelName = levelName;
 		
