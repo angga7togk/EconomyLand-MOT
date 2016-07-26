@@ -97,7 +97,7 @@ public class EconomyLand extends PluginBase implements Listener{
 			}
 		}catch(NumberFormatException e){}
 		
-		long count = this.provider.getAll().values().stream().filter((l) -> l.getOwner().toLowerCase().equals(owner)).count();
+		long count = this.provider.getAll().values().stream().filter((l) -> l.getOwner().equalsIgnoreCase(owner)).count();
 		if(count >= max){
 			throw new LandCountMaximumException("Land is now maximum", max);
 		}
