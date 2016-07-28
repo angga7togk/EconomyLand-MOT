@@ -54,7 +54,7 @@ public class Land{
 		double startX = start.x, endX = end.x;
 		double startZ = start.y, endZ = end.y;
 		
-		if(start.x > end.y){
+		if(start.x > end.x){
 			startX = end.x;
 			endX = start.x;
 		}
