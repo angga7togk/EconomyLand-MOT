@@ -877,7 +877,7 @@ public class EconomyLand extends PluginBase implements Listener{
 					if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.pickup"))){
 						event.setCancelled(true);
 						
-						if(now - lastPickup[0] > 2000){
+						if(lastPickup != null && now - lastPickup[0] > 2000){
 							player.sendMessage(this.getMessage("pickup-forbidden", new Object[]{
 									land.getId(), land.getOwner()
 							}));
