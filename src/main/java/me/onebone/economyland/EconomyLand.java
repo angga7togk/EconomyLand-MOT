@@ -965,10 +965,18 @@ public class EconomyLand extends PluginBase implements Listener{
 						entries[3] = new Entry((int) pos2.x, (int) pos1.z, (int) pos1.y, 
 								show ? Block.GLASS : player.level.getBlock(pos1).getId(), 0, UpdateBlockPacket.FLAG_ALL);
 					}
-					pk.records = entries;
+					//pk.records = entries;
 				}
 				
-				player.dataPacket(pk);
+				for(int i = 0; i < entries.length; i++){
+					pk.x = entries[i].x;
+					pk.y = entries[i].y;
+					pk.z = entries[i].z;
+					pk.blockId = entries[i].blockId;
+					pk.blockData = entries[i].blockData;
+
+					player.dataPacket(pk);
+				}
 			}
 			
 			if(!show && removes.contains(player)){
