@@ -835,7 +835,7 @@ public class EconomyLand extends PluginBase implements Listener{
 						land.getId(), land.getOwner()
 				}));
 				
-				if(event.getAction() == PlayerInteractEvent.RIGHT_CLICK_BLOCK && !block.canBeActivated() && event.getItem().canBePlaced()){
+				if(event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && !block.canBeActivated() && event.getItem().canBePlaced()){
 					this.placeQueue.add(player);
 				}
 			}
