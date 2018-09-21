@@ -970,8 +970,8 @@ public class EconomyLand extends PluginBase implements Listener{
 						pk.x = entries[i].x;
 						pk.y = entries[i].y;
 						pk.z = entries[i].z;
-						pk.blockId = entries[i].blockId;
-						pk.blockData = entries[i].blockData;
+						pk.blockRuntimeId = entries[i].blockId;
+						pk.flags = entries[i].blockData;
 
 						player.dataPacket(pk);
 					}
