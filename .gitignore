@@ -1,6 +1,7 @@
 /target
 *.bat
-
 .settings
 .project
 .classpath
+.idea
+*.iml

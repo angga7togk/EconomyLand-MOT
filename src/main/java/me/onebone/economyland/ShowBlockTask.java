@@ -29,6 +29,6 @@ public class ShowBlockTask extends PluginTask<EconomyLand>{
 	
 	@Override
 	public void onRun(int currentTick){
-		this.getOwner().showBlocks(show = !show);
+		this.getOwner().showBlocks(show = !show); //TODO
 	}
 }

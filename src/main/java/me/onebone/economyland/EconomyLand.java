@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import cn.nukkit.level.GlobalBlockPalette;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -102,7 +103,7 @@ public class EconomyLand extends PluginBase implements Listener{
 			throw new LandCountMaximumException("Land is now maximum", max);
 		}
 		
-		return this.provider.addLand(new Vector2(start.x, start.z), new Vector2(end.x, end.z), level, 0, owner);
+		return this.provider.addLand(new Vector2(start.x, start.z), new Vector2(end.x, end.z), level, price, owner);
 	}
 	
 	public Land checkOverlap(Position start, Position end){
@@ -202,7 +203,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		
 		this.provider = new YamlProvider(this, new File(this.getDataFolder(), "Land.yml"));
 		
-		this.getServer().getScheduler().scheduleDelayedRepeatingTask(new ShowBlockTask(this), 20, 20);
+		//this.getServer().getScheduler().scheduleDelayedRepeatingTask(new ShowBlockTask(this), 20, 20);
 		int interval = this.getConfig().getInt("auto-save", 300) * 1200;
 		this.getServer().getScheduler().scheduleDelayedRepeatingTask(new AutoSaveTask(this), interval, interval);
 		this.getServer().getPluginManager().registerEvents(this, this);
@@ -307,7 +308,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				double price = (Math.abs(Math.floor(player.x) - Math.floor(pos1.x)) + 1) * (Math.abs(Math.floor(player.y) - Math.floor(pos1.y)) + 1) * this.getConfig().getDouble("price.per-block", 100D);
 				if(this.api.myMoney(player) >= price){
 					try{
-						this.addLand(pos1, pos2, pos1.level, player.getName());
+						this.addLand(pos1, pos2, pos1.level, player.getName(), price);
 						this.api.reduceMoney(player, price, true);
 						
 						sender.sendMessage(this.getMessage("bought-land"));
@@ -966,15 +967,15 @@ public class EconomyLand extends PluginBase implements Listener{
 								show ? Block.GLASS : player.level.getBlock(pos1).getId(), 0, UpdateBlockPacket.FLAG_ALL);
 					}
 
-					for(int i = 0; i < entries.length; i++){
-						pk.x = entries[i].x;
-						pk.y = entries[i].y;
-						pk.z = entries[i].z;
-						pk.blockRuntimeId = entries[i].blockId;
-						pk.flags = entries[i].blockData;
+                    for (Entry entry : entries) {
+                        pk.x = entry.x;
+                        pk.y = entry.y;
+                        pk.z = entry.z;
+                        pk.blockRuntimeId = GlobalBlockPalette.getOrCreateRuntimeId(entry.blockId, entry.blockData);
+						pk.flags = entry.flags;
 
-						player.dataPacket(pk);
-					}
+                        player.dataPacket(pk);
+                    }
 					//pk.records = entries;
 				}
 			}
