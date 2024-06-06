@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import angga7togk.economyapi.database.EconomyDB;
 import cn.nukkit.level.GlobalBlockPalette;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -63,10 +64,8 @@ import cn.nukkit.utils.Utils;
 import me.onebone.economyland.error.LandCountMaximumException;
 import me.onebone.economyland.error.LandOverlapException;
 import me.onebone.economyland.provider.*;
-import me.onebone.economyapi.EconomyAPI;
 
 public class EconomyLand extends PluginBase implements Listener{
-	private EconomyAPI api;
 	
 	private Provider provider;
 	
@@ -134,7 +133,7 @@ public class EconomyLand extends PluginBase implements Listener{
 						if(p.equals("M")){
 							i = index;
 							
-							builder.append(api.getMonetaryUnit());
+							builder.append("Rp");
 							continue;
 						}
 						int param = Integer.parseInt(p);
@@ -171,8 +170,6 @@ public class EconomyLand extends PluginBase implements Listener{
 		placeQueue = new LinkedList<Player>();
 		
 		manager = new PlayerManager();
-		
-		api = EconomyAPI.getInstance();
 		
 		String name = this.getConfig().get("language", "eng");
 		InputStream is = this.getResource("lang_" + name + ".json");
@@ -217,7 +214,56 @@ public class EconomyLand extends PluginBase implements Listener{
 	}
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
-		if(command.getName().equals("land")){
+		if(command.getName().equals("startp")){
+			if(!(sender instanceof Player)){
+				sender.sendMessage(TextFormat.RED + "Please run this command in-game.");
+				return true;
+			}
+
+			Player player = (Player) sender;
+			if(!player.hasPermission("economyland.command.land.pos1")){
+				player.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
+				return true;
+			}
+
+			if(!players.containsKey(player)){
+				players.put(player, new Position[2]);
+			}
+			players.get(player)[0] = new Position(player.x, player.y, player.z, player.level);
+
+			sender.sendMessage(this.getMessage("pos1-set", new Object[]{
+					(int) player.x, (int) player.y, (int) player.z
+			}));
+		}else if(command.getName().equals("endp")){
+			if(!(sender instanceof Player)){
+				sender.sendMessage(TextFormat.RED + "Please run this command in-game.");
+				return true;
+			}
+
+			Player player = (Player) sender;
+			if(!player.hasPermission("economyland.command.land.pos2")){
+				player.sendMessage(new TranslationContainer(TextFormat.RED + "%commands.generic.permission"));
+				return true;
+			}
+
+			if(!players.containsKey(player)){
+				sender.sendMessage(this.getMessage("pos1-not-set"));
+				return true;
+			}
+
+			Position pos1 = players.get(player)[0];
+			if(pos1.level != player.level){
+				sender.sendMessage(this.getMessage("must-one-world"));
+				return true;
+			}
+			players.get(player)[1] = new Position(player.x, player.y, player.z, player.level);
+
+			double price = (Math.abs(Math.floor(player.x) - Math.floor(pos1.x)) + 1) * (Math.abs(Math.floor(player.y) - Math.floor(pos1.y)) + 1) * this.getConfig().getDouble("price.per-block", 100D);
+
+			sender.sendMessage(this.getMessage("pos2-set", new Object[]{
+					(int) player.x, (int) player.y, (int) player.z, price
+			}));
+		}else if(command.getName().equals("land")){
 			if(args.length < 1){
 				return false;
 			}
@@ -306,10 +352,10 @@ public class EconomyLand extends PluginBase implements Listener{
 				}
 				
 				double price = (Math.abs(Math.floor(player.x) - Math.floor(pos1.x)) + 1) * (Math.abs(Math.floor(player.y) - Math.floor(pos1.y)) + 1) * this.getConfig().getDouble("price.per-block", 100D);
-				if(this.api.myMoney(player) >= price){
+				if(EconomyDB.myMoney(player) >= price){
 					try{
 						this.addLand(pos1, pos2, pos1.level, player.getName(), price);
-						this.api.reduceMoney(player, price, true);
+						EconomyDB.reduceMoney(player, (int) price);
 						
 						sender.sendMessage(this.getMessage("bought-land"));
 					}catch(LandOverlapException e){
@@ -352,7 +398,7 @@ public class EconomyLand extends PluginBase implements Listener{
 				if(land.getOwner().toLowerCase().equals(sender.getName().toLowerCase()) || sender.hasPermission("economyland.admin.sell")){
 					this.provider.removeLand(land.getId());
 					
-					this.api.addMoney(land.getOwner(), land.getPrice() / 2);
+					EconomyDB.addMoney(land.getOwner(), (int) (land.getPrice() / 2));
 					
 					sender.sendMessage(this.getMessage("sold-land", new Object[]{id, land.getPrice() / 2}));
 				}else{
@@ -971,7 +1017,7 @@ public class EconomyLand extends PluginBase implements Listener{
                         pk.x = entry.x;
                         pk.y = entry.y;
                         pk.z = entry.z;
-                        pk.blockRuntimeId = GlobalBlockPalette.getOrCreateRuntimeId(entry.blockId, entry.blockData);
+                        pk.blockRuntimeId = GlobalBlockPalette.getOrCreateRuntimeId(player.protocol, entry.blockId, entry.blockData);
 						pk.flags = entry.flags;
 
                         player.dataPacket(pk);
