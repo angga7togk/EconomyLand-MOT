@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Map;
 
 import angga7togk.economyapi.database.EconomyDB;
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.passive.EntityAnimal;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.level.GlobalBlockPalette;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -849,6 +852,29 @@ public class EconomyLand extends PluginBase implements Listener{
 			event.setCancelled();
 		}
 	}
+
+	public void onDamageAnimal(EntityDamageByEntityEvent event){
+		Entity entity = event.getEntity();
+		if (event.getDamager() instanceof Player && entity instanceof EntityAnimal){
+			Player player = (Player) event.getDamager(); // player damager
+			Land land;
+			if((land = this.provider.findLand(player)) != null){
+				if(!(land.hasPermission(player) || player.hasPermission("economyland.admin.modify"))){
+					player.sendMessage(this.getMessage("modify-forbidden", new Object[]{
+							land.getId(), land.getOwner()
+					}));
+
+					event.setCancelled(true);
+				}
+			}else if(this.getConfig().getStringList("white-world-protection").contains(player.level.getFolderName()) && !player.hasPermission("economyland.admin.modify")){
+				if(this.getConfig().getBoolean("show-white-world-message", true)){
+					player.sendMessage(this.getMessage("modify-whiteland"));
+				}
+
+				event.setCancelled();
+			}
+		}
+	}
 	
 	@EventHandler (ignoreCancelled = true)
 	public void onBlockUpdate(BlockUpdateEvent event){
@@ -869,7 +895,7 @@ public class EconomyLand extends PluginBase implements Listener{
 		Block block = event.getBlock();
 		Item item = event.getItem();
 		
-		if(item.canBePlaced() && !block.canBeActivated() && event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){ // placing
+		if((item != null && item.canBePlaced()) && !block.canBeActivated() && event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){ // placing
 			block = block.getSide(event.getFace());
 		}
 		
